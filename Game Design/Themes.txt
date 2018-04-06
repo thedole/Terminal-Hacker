@@ -1,0 +1,26 @@
+Easy
+Theme: Theme park
+Anagram words:
+Ride
+Line
+Belt
+Cart
+Spin
+
+Medium
+Theme: Online candy shop
+Anagram words:
+Lollipop
+Candy Cane
+Polka dots
+Bubble gum
+Fizzy drink
+
+Hard
+Theme: Illuminati
+Anagram words:
+World Domination
+Mind control
+Disinformation
+World Bank
+Population control
