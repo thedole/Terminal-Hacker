@@ -17,10 +17,11 @@ public class Hacker : MonoBehaviour {
     };
     private static Dictionary<int, List<string>> passwords = new Dictionary<int, List<string>>
     {
-        {1, new List<string>{"test1"} },
-        {2, new List<string>{"test2"} },
-        {3, new List<string>{"test3"} },
+        {1, new List<string>{"ride", "line", "belt", "cart", "spin"} },
+        {2, new List<string>{"lollipop", "candycane", "polkadots", "bubblegum", "fizzydrink"} },
+        {3, new List<string>{"world domination", "mindcontrol", "disinformation", "world bank", "population control" } },
     };
+    private string password;
     private int level;
     private string greeting;
     private Screen currentScreen;
@@ -146,7 +147,7 @@ public class Hacker : MonoBehaviour {
 
     private void CheckPassword(string input)
     {
-        var password = passwords[level].First();
+        
         if(input == password)
         {
             Terminal.WriteLine("Congratulations, you are 1337 h4xx0r! Press enter to return to menu");
@@ -155,6 +156,16 @@ public class Hacker : MonoBehaviour {
         }
 
         Terminal.WriteLine("That's not it, pick yourself up and try again, or type menu to return to main menu!");
+    }
+
+    private string GetPassword(int level)
+    {
+        var passwordList = passwords[level];
+        var randomNumber = UnityEngine.Random.Range(0, passwordList.Count - 1);
+        var index = (int)Math.Floor((double) randomNumber);
+
+        var password = passwordList.ElementAt(index);
+        return password;
     }
 
     private void SelectLevel(string input)
@@ -193,6 +204,8 @@ public class Hacker : MonoBehaviour {
         currentScreen = Screen.Password;
         Terminal.ClearScreen();
         Terminal.WriteLine("You have selected level " + level);
+        password = GetPassword(level);
+        Terminal.WriteLine(password);
     }
 
     enum Screen { MainMenu, Password, Win, EasterEgg }
