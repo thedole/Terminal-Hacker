@@ -172,7 +172,6 @@ public class Hacker : MonoBehaviour {
     {   
         switch (input)
         {
-            // TODO Handle differently depending on current screen
             case "1":
             case "2":
             case "3":
@@ -203,7 +202,7 @@ public class Hacker : MonoBehaviour {
     {
         currentScreen = Screen.Password;
         Terminal.ClearScreen();
-        Terminal.WriteLine("You have selected level " + level);
+        Terminal.WriteLine("Enter your password");
         password = GetPassword(level);
         Terminal.WriteLine(password);
     }
