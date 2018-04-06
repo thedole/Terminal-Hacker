@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -13,7 +15,12 @@ public class Hacker : MonoBehaviour {
         "",
         "Select your target:"
     };
-
+    private static Dictionary<int, List<string>> passwords = new Dictionary<int, List<string>>
+    {
+        {1, new List<string>{"test1"} },
+        {2, new List<string>{"test2"} },
+        {3, new List<string>{"test3"} },
+    };
     private int level;
     private string greeting;
     private Screen currentScreen;
@@ -28,6 +35,7 @@ public class Hacker : MonoBehaviour {
     private void ShowMainMenu(string greeting)
     {
         currentScreen = Screen.MainMenu;
+        level = 0;
         var menuBuilder = new StringBuilder();
         BuildMenu(menuBuilder, greeting);
 
@@ -50,6 +58,8 @@ public class Hacker : MonoBehaviour {
 
     void OnUserInput(string input)
     {
+        if (EasterEgg(input)) return;
+
         // We can always go directly to the main menu
         if (input.Equals("menu",StringComparison.InvariantCultureIgnoreCase))
         {
@@ -65,15 +75,90 @@ public class Hacker : MonoBehaviour {
 
         if (currentScreen == Screen.Password)
         {
-            Terminal.WriteLine("You typed: '" + input + "'");
+            CheckPassword(input);
             return;
         }
 
-        
+        if (currentScreen == Screen.Win)
+        {
+            ProcessWinScreen(input);
+            return;
+        }
+
+        if (currentScreen == Screen.EasterEgg)
+        {
+            ShowMainMenu("1337");
+            return;
+        }
+    }
+
+    private void ProcessWinScreen(string input)
+    {
+        ShowMainMenu(greeting);
+    }
+
+    private bool EasterEgg(string input)
+    {
+        switch (level)
+        {
+            case 0:
+                if (input.Equals("1337", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Terminal.ClearScreen();
+                    Terminal.WriteLine("Hackers delight!");
+                    currentScreen = Screen.EasterEgg;
+                    return true;
+                }
+                break;
+            case 1:
+                if (input.Equals("loop", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Terminal.ClearScreen();
+                    Terminal.WriteLine("Crazy speed demon!");
+                    currentScreen = Screen.EasterEgg;
+                    return true;
+                }
+                break;
+
+            case 2:
+                if (input.Equals("sugar", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Terminal.ClearScreen();
+                    Terminal.WriteLine("May your teeth rot in sweet, sweet candy!");
+                    currentScreen = Screen.EasterEgg;
+                    return true;
+                }
+                break;
+            case 3:
+                if (input.Equals("conspiracy", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Terminal.ClearScreen();
+                    Terminal.WriteLine("Trust no one!");
+                    currentScreen = Screen.EasterEgg;
+                    return true;
+                }
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    private void CheckPassword(string input)
+    {
+        var password = passwords[level].First();
+        if(input == password)
+        {
+            Terminal.WriteLine("Congratulations, you are 1337 h4xx0r! Press enter to return to menu");
+            currentScreen = Screen.Win;
+            return;
+        }
+
+        Terminal.WriteLine("That's not it, pick yourself up and try again, or type menu to return to main menu!");
     }
 
     private void SelectLevel(string input)
-    {
+    {   
         switch (input)
         {
             // TODO Handle differently depending on current screen
@@ -82,11 +167,6 @@ public class Hacker : MonoBehaviour {
             case "3":
                 SetLevel(input);
                 StartGame();
-                break;
-
-            case "conspiracy":
-            case "Conspiracy":
-                ShowMainMenu("Trust no one!");
                 break;
 
             default:
@@ -115,5 +195,5 @@ public class Hacker : MonoBehaviour {
         Terminal.WriteLine("You have selected level " + level);
     }
 
-    enum Screen { MainMenu, Password, Win }
+    enum Screen { MainMenu, Password, Win, EasterEgg }
 }
