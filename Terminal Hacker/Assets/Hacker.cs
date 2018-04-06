@@ -166,8 +166,7 @@ public class Hacker : MonoBehaviour {
     private string GetPassword(int level)
     {
         var passwordList = passwords[level];
-        var randomNumber = UnityEngine.Random.Range(0, passwordList.Count - 1);
-        var index = (int)Math.Floor((double) randomNumber);
+        var index = UnityEngine.Random.Range(0, passwordList.Count);
 
         var password = passwordList.ElementAt(index);
         return password;
