@@ -21,6 +21,11 @@ public class Hacker : MonoBehaviour {
         {2, new List<string>{"lollipop", "candycane", "polkadots", "bubblegum", "fizzydrink"} },
         {3, new List<string>{"world domination", "mindcontrol", "disinformation", "world bank", "population control" } },
     };
+    private static Dictionary<int, string> levelHeader = new Dictionary<int, string> {
+        { 1, "Theme park ride control system" },
+        { 2, "Candy heaven order system" },
+        { 3, "Illuminati total control system" },
+    };
     private string password;
     private int level;
     private string greeting;
@@ -202,6 +207,8 @@ public class Hacker : MonoBehaviour {
     {
         currentScreen = Screen.Password;
         Terminal.ClearScreen();
+        var heading = levelHeader[level];
+        Terminal.WriteLine(heading);
         Terminal.WriteLine("Enter your password");
         password = GetPassword(level);
         Terminal.WriteLine(password);
