@@ -183,7 +183,7 @@ __________________________
         Terminal.WriteLine("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         Terminal.WriteLine("Type 'menu' to return to main menu");
         Terminal.WriteLine("");
-        Terminal.WriteLine("Enter password, hint:" + password.Anagram());
+        Terminal.WriteLine("Enter password, hint: " + password.Anagram());
     }
 
     private void CheckPassword(string input)
