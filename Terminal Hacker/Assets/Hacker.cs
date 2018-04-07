@@ -26,6 +26,38 @@ public class Hacker : MonoBehaviour {
         { 2, "Candy heaven order system" },
         { 3, "Illuminati total control system" },
     };
+    private static Dictionary<int, string> levelReward = new Dictionary<int, string> {
+        { 1, @"You can now control all of the parks rides
+
+
+__________________________
+/ / / / / / / / / / / / / 
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+"
+        },
+        { 2, @"All the candy you can eat is yours
+
+        .*´.‾.`*.
+       /.´.´  .´ \ 
+      |.´ /´‾`\.´ |
+      |.´|     |.´|
+      |.´|     '--'
+      |.´|   
+      |.´|
+      '--'"
+        },
+        { 3, @"Total control is yours
+        $
+      $$$$$.
+    $'  $   '
+    $$  $
+     '$$$$$. 
+        $  $$
+    $.  $  '$
+     '$$$$$'
+        $
+" },
+    };
     private string password;
     private int level;
     private string greeting;
@@ -155,12 +187,23 @@ public class Hacker : MonoBehaviour {
         
         if(input == password)
         {
-            Terminal.WriteLine("Congratulations, you are 1337 h4xx0r! Press enter to return to menu");
-            currentScreen = Screen.Win;
+            ShowWinScreen();
             return;
         }
 
         Terminal.WriteLine("That's not it, pick yourself up and try again, or type menu to return to main menu!");
+    }
+
+    private void ShowWinScreen()
+    {
+        currentScreen = Screen.Win;
+        Terminal.ClearScreen();
+        ShowLevelReward();
+    }
+
+    private void ShowLevelReward()
+    {
+        Terminal.WriteLine(levelReward[level]);
     }
 
     private string GetPassword(int level)
@@ -205,12 +248,12 @@ public class Hacker : MonoBehaviour {
     private void StartGame()
     {
         currentScreen = Screen.Password;
-        Terminal.ClearScreen();
+        password = GetPassword(level);
         var heading = levelHeader[level];
+
+        Terminal.ClearScreen();
         Terminal.WriteLine(heading);
         Terminal.WriteLine("Enter your password");
-        password = GetPassword(level);
-        Terminal.WriteLine(password);
     }
 
     enum Screen { MainMenu, Password, Win, EasterEgg }
