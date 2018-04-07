@@ -70,6 +70,20 @@ __________________________
         ShowMainMenu(greeting);
     }
 
+    // ------------ Main Menu ------------
+    private static void BuildMenu(StringBuilder builder, string greeting)
+    {
+        for (var i = 0; i < _menuText.Length; i++)
+        {
+            if (i == _menuText.Length - 1)
+            {
+                builder.AppendLine(greeting);
+            }
+
+            builder.AppendLine(_menuText[i]);
+        }
+    }
+
     private void ShowMainMenu(string greeting)
     {
         currentScreen = Screen.MainMenu;
@@ -81,19 +95,37 @@ __________________________
         Terminal.WriteLine(menuBuilder.ToString());
     }
 
-    private static void BuildMenu(StringBuilder builder, string greeting)
+    private void SelectLevel(string input)
     {
-        for (var i = 0; i < _menuText.Length; i++)
+        switch (input)
         {
-            if (i == _menuText.Length - 1)
-            {
-                builder.AppendLine(greeting);
-            }
+            case "1":
+            case "2":
+            case "3":
+                SetLevel(input);
+                AskForPassword();
+                break;
 
-            builder.AppendLine(_menuText[i]);
-        }      
+            default:
+                var message = "Command unknown '" + input + "'";
+                ShowMainMenu(message);
+                break;
+        }
     }
 
+    private void SetLevel(string input)
+    {
+        int numericalInput;
+        if (int.TryParse(input, out numericalInput))
+        {
+            if (numericalInput > 0 && numericalInput <= 3)
+            {
+                level = numericalInput;
+            }
+        }
+    }
+
+    // --------- input processing --------
     void OnUserInput(string input)
     {
         if (EasterEgg(input)) return;
@@ -130,11 +162,60 @@ __________________________
         }
     }
 
+    // ------------ Password --------------
+    private string GetPassword(int level)
+    {
+        var passwordList = passwords[level];
+        var index = UnityEngine.Random.Range(0, passwordList.Count);
+
+        var password = passwordList.ElementAt(index);
+        return password;
+    }
+
+    private void AskForPassword()
+    {
+        currentScreen = Screen.Password;
+        password = GetPassword(level);
+        var heading = levelHeader[level];
+
+        Terminal.ClearScreen();
+        Terminal.WriteLine(heading);
+        Terminal.WriteLine("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
+        Terminal.WriteLine("Type 'menu' to return to main menu");
+        Terminal.WriteLine("");
+        Terminal.WriteLine("Enter password, hint:" + password.Anagram());
+    }
+
+    private void CheckPassword(string input)
+    {
+        if (input == password)
+        {
+            ShowWinScreen();
+            return;
+        }
+
+        AskForPassword();
+    }
+
+    // ---------- Win Screen -------------
     private void ProcessWinScreen(string input)
     {
         ShowMainMenu(greeting);
     }
 
+    private void ShowWinScreen()
+    {
+        currentScreen = Screen.Win;
+        Terminal.ClearScreen();
+        ShowLevelReward();
+    }
+
+    private void ShowLevelReward()
+    {
+        Terminal.WriteLine(levelReward[level]);
+    }
+
+    // --------- Easteregg ---------------
     private bool EasterEgg(string input)
     {
         switch (level)
@@ -182,79 +263,6 @@ __________________________
         return false;
     }
 
-    private void CheckPassword(string input)
-    {
-        
-        if(input == password)
-        {
-            ShowWinScreen();
-            return;
-        }
-
-        Terminal.WriteLine("That's not it, pick yourself up and try again, or type menu to return to main menu!");
-    }
-
-    private void ShowWinScreen()
-    {
-        currentScreen = Screen.Win;
-        Terminal.ClearScreen();
-        ShowLevelReward();
-    }
-
-    private void ShowLevelReward()
-    {
-        Terminal.WriteLine(levelReward[level]);
-    }
-
-    private string GetPassword(int level)
-    {
-        var passwordList = passwords[level];
-        var index = UnityEngine.Random.Range(0, passwordList.Count);
-
-        var password = passwordList.ElementAt(index);
-        return password;
-    }
-
-    private void SelectLevel(string input)
-    {   
-        switch (input)
-        {
-            case "1":
-            case "2":
-            case "3":
-                SetLevel(input);
-                StartGame();
-                break;
-
-            default:
-                var message = "Command unknown '" + input + "'";
-                ShowMainMenu(message);
-                break;
-        }
-    }
-
-    private void SetLevel(string input)
-    {
-        int numericalInput;
-        if (int.TryParse(input, out numericalInput))
-        {
-            if (numericalInput > 0 && numericalInput <= 3)
-            {
-                level = numericalInput;
-            }
-        }
-    }
-
-    private void StartGame()
-    {
-        currentScreen = Screen.Password;
-        password = GetPassword(level);
-        var heading = levelHeader[level];
-
-        Terminal.ClearScreen();
-        Terminal.WriteLine(heading);
-        Terminal.WriteLine("Enter your password");
-    }
-
+    // ------- Screen definition -----------
     enum Screen { MainMenu, Password, Win, EasterEgg }
 }
